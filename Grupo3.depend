@@ -1,0 +1,6 @@
+# depslib dependency file v1.0
+1616720951 source:c:\users\j.bragon\documents\ufop\aeds ii\grupo3aedsii\main.c
+	<stdio.h>
+	<stdlib.h>
+	<stdbool.h>
+
