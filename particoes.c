@@ -5,20 +5,23 @@
 
 #include "particoes.h"
 
-void classificacao_interna(FILE *arq, Lista *nome_arquivos_saida, int M, int nFunc) {
+void classificacao_interna(FILE *arq, Lista *nome_arquivos_saida, int M, int nFunc)
+{
     rewind(arq); //posiciona cursor no inicio do arquivo
 
     int reg = 0;
 
-    while (reg != nFunc) {
+    while (reg != nFunc)
+    {
         //le o arquivo e coloca no vetor
         TFunc *v[M];
         int i = 0;
-        while (!feof(arq)) {
+        while (!feof(arq))
+        {
             fseek(arq, (reg) * tamanho_registro(), SEEK_SET);
             v[i] = le_funcionario(arq);
             imprime_funcionario(v[i]);
-       //     imprime_funcionario(v[i]);
+            //     imprime_funcionario(v[i]);
             i++;
             reg++;
             if(i>=M) break;
@@ -31,12 +34,14 @@ void classificacao_interna(FILE *arq, Lista *nome_arquivos_saida, int M, int nFu
         }*/
         printf("%d - %d \n", i, M);
         //faz ordenacao
-        for (int j = 1; j < M; j++) {
-                printf("entrou - 5 \n");
+        for (int j = 1; j < M; j++)
+        {
+            printf("entrou - 5 \n");
             TFunc *f = v[j];
             i = j - 1;
-            while ((i >= 0) && (v[i]->cod > f->cod)) {
-                    printf("entrou while - 5 \n");
+            while ((i >= 0) && (v[i]->cod > f->cod))
+            {
+                printf("entrou while - 5 \n");
                 v[i + 1] = v[i];
                 i = i - 1;
             }
@@ -49,10 +54,14 @@ void classificacao_interna(FILE *arq, Lista *nome_arquivos_saida, int M, int nFu
         printf("\n%s\n", nome_particao);
         FILE *p;
         printf("entrou - 6 \n");
-        if ((p = fopen(nome_particao, "wb+")) == NULL) {
+        if ((p = fopen(nome_particao, "wb+")) == NULL)
+        {
             printf("Erro criar arquivo de saida\n");
-        } else {
-            for (int i = 0; i < M; i++) {
+        }
+        else
+        {
+            for (int i = 0; i < M; i++)
+            {
                 fseek(p, (i) * tamanho_registro(), SEEK_SET);
                 salva_funcionario(v[i], p);
                 imprime_funcionario(v[i]);
@@ -65,42 +74,55 @@ void classificacao_interna(FILE *arq, Lista *nome_arquivos_saida, int M, int nFu
     }
 }
 
-int menorChave(TFunc *array[], int size){
+int menorChave(TFunc *array[], int size)
+{
     int posMenor, i, posNotNULL;
     char posNull = 'N';
     TFunc *menor;
 
-    for(i = 0; i < size; i++){
-        if(array[i] == NULL){
-            printf("---%d--- posicao null \n", i);
+    for(i = 0; i < size; i++)
+    {
+        if(array[i] == NULL)
+        {
             posNull = 'S';
-        }else{
+        }
+        else
+        {
             posNotNULL = i;
         }
     }
-    if(posNull == 'N'){
-        for(i = 0; i < size; i++){
-            if(i == 0){
+    if(posNull == 'N')
+    {
+        for(i = 0; i < size; i++)
+        {
+            if(i == 0)
+            {
                 menor = array[0];
                 posMenor = 0;
-            }else if (menor->cod > array[i]->cod){
+            }
+            else if (menor->cod > array[i]->cod)
+            {
                 menor = array[i];
                 posMenor = i;
             }
         }
-    }else{
+    }
+    else
+    {
         return posNotNULL;
-        }
+    }
 
     return posMenor;
 }
 
-void salva_ArqSaida(FILE *saida, int indice, TFunc *item){
-        fseek(saida, (indice)*tamanho_registro(), SEEK_SET);
-        salva_funcionario(item, saida);
+void salva_ArqSaida(FILE *saida, int indice, TFunc *item)
+{
+    fseek(saida, (indice)*tamanho_registro(), SEEK_SET);
+    salva_funcionario(item, saida);
 }
 
-void selecao_natural(FILE *arq, Lista *nome_arquivos_saida, int M, int nFunc, int n){
+void selecao_natural(FILE *arq, Lista *nome_arquivos_saida, int M, int nFunc, int n)
+{
 
     rewind(arq);
     TFunc *array[M], *reservatorio[M], *menorRegistro, *proxRegistroEntrada;
@@ -111,8 +133,10 @@ void selecao_natural(FILE *arq, Lista *nome_arquivos_saida, int M, int nFunc, in
     int posReservatorio = 0;
 
     /* LER M REGISTROS DO ARQUIVO PARA A MEMÓRIA */
-    if(arq != NULL){
-        while(count < M){
+    if(arq != NULL)
+    {
+        while(count < M)
+        {
             fseek(arq, (posArqEntrada)*tamanho_registro(), SEEK_SET);
             array[count] = le_funcionario(arq);
             count ++;
@@ -128,13 +152,15 @@ void selecao_natural(FILE *arq, Lista *nome_arquivos_saida, int M, int nFunc, in
         arquivoSaida = fopen(nome_particao, "wb+");
 
         /* CASO AINDA EXISTA ESPAÇO LIVRE NO RESERVATÓRIO */
-        do{
+        do
+        {
             /* SELECIONAR NO ARRAY EM MEMÓRIA, O REGISTRO R COM MENOR CHAVE */
             posMenorArray = menorChave(array, M);
             menorRegistro = array[posMenorArray];
 
             /* CERTO */
-            if (arquivoSaida != NULL){
+            if (arquivoSaida != NULL)
+            {
                 salva_ArqSaida(arquivoSaida, posArqSaida, menorRegistro);
                 posArqSaida++;
             }
@@ -150,15 +176,18 @@ void selecao_natural(FILE *arq, Lista *nome_arquivos_saida, int M, int nFunc, in
             /* CASO A CHAVE DO PROXIMO REGISTRO DE ENTRADA SEJA MENOR DO QUE O MENOR REGISTRO
              * GRAVA NO RESERVATÓRIO E SUBSTITUI NO ARRAY DE MEMÓRIA O MENOR REGISTRO PELO PROXIMO REGISTRO DE ENTRADA
              */
-            if(feof(arq)){
+            if(feof(arq))
+            {
                 posMenorArray = menorChave(array, M);
                 menorRegistro = array[posMenorArray];
                 salva_ArqSaida(arquivoSaida, posArqSaida, menorRegistro);
                 break;
             }
-            if(proxRegistroEntrada->cod < menorRegistro->cod){
+            if(proxRegistroEntrada->cod < menorRegistro->cod)
+            {
                 /* GRAVA NO RESERVATÓRIO */
-                if(posArqEntrada < nFunc){
+                if(posArqEntrada < nFunc)
+                {
 
                     reservatorio[posReservatorio] = proxRegistroEntrada;
                     posReservatorio++;
@@ -168,15 +197,17 @@ void selecao_natural(FILE *arq, Lista *nome_arquivos_saida, int M, int nFunc, in
                     fseek(arq, (posArqEntrada)*tamanho_registro(), SEEK_SET);
                     proxRegistroEntrada = le_funcionario(arq);
                     array[posMenorArray] = proxRegistroEntrada;
-                   // array[posMenorArray] = proxRegistroEntrada;
+                    // array[posMenorArray] = proxRegistroEntrada;
                 }
-                else{
+                else
+                {
                     reservatorio[posReservatorio] = proxRegistroEntrada;
                     array[posMenorArray] = NULL;
 
                     posMenorArray = menorChave(array, M);
                     menorRegistro = array[posMenorArray];
-                    if (arquivoSaida != NULL){
+                    if (arquivoSaida != NULL)
+                    {
                         salva_ArqSaida(arquivoSaida, posArqSaida, menorRegistro);
                         posArqSaida++;
                     }
@@ -185,19 +216,24 @@ void selecao_natural(FILE *arq, Lista *nome_arquivos_saida, int M, int nFunc, in
                 }
             }
 
-            if(posReservatorio < M){
+            if(posReservatorio < M)
+            {
                 /* VERIFICA QUANTIDADE DE ITENS NO RESERVATÓRIO */
-            }else{
+            }
+            else
+            {
                 /* FECHAR A PARTIÇÃO DE SAÍDA */
                 fclose(arquivoSaida);
 
                 /* COPIAR OS REGISTROS DO RESERVATÓRIO PARA O ARRAY EM MEMÓRIA */
-                for(int i = 0; i < posReservatorio; i ++){
+                for(int i = 0; i < posReservatorio; i ++)
+                {
                     array[i] = reservatorio[i];
                 }
 
                 /* ESVAZIAR O RESERVATÓRIO */
-                for(int r = 0; r < M; r++){
+                for(int r = 0; r < M; r++)
+                {
                     reservatorio[r] = NULL;
                 }
                 posReservatorio = 0;
@@ -210,6 +246,7 @@ void selecao_natural(FILE *arq, Lista *nome_arquivos_saida, int M, int nFunc, in
                 arquivoSaida = fopen(nome_particao, "wb+");
                 posArqSaida = 0;
             }
-        }while(posReservatorio < M);
+        }
+        while(posReservatorio < M);
     }
 }

@@ -416,3 +416,82 @@
 1615750884 source:c:\users\jvzma\desktop\tp\pilha.c
 	"pilha.h"
 
+1615751645 source:c:\users\j.bragon\documents\ufop\aeds ii\grupo3aedsii\arvore_binaria.c
+	"arvore_binaria.h"
+
+1616797151 c:\users\j.bragon\documents\ufop\aeds ii\grupo3aedsii\arvore_binaria.h
+	<stdio.h>
+	<stdlib.h>
+	"funcionarios.h"
+
+1615749978 c:\users\j.bragon\documents\ufop\aeds ii\grupo3aedsii\funcionarios.h
+	<stdio.h>
+
+1615750035 source:c:\users\j.bragon\documents\ufop\aeds ii\grupo3aedsii\funcionario.c
+	<stdlib.h>
+	<string.h>
+	"funcionarios.h"
+
+1615750279 source:c:\users\j.bragon\documents\ufop\aeds ii\grupo3aedsii\intercalacao.c
+	"intercalacao.h"
+	"funcionarios.h"
+	<limits.h>
+	<stdio.h>
+	<stdlib.h>
+
+1615751144 c:\users\j.bragon\documents\ufop\aeds ii\grupo3aedsii\intercalacao.h
+	"lista.h"
+	"pilha.h"
+
+1615751750 c:\users\j.bragon\documents\ufop\aeds ii\grupo3aedsii\lista.h
+
+1616797160 c:\users\j.bragon\documents\ufop\aeds ii\grupo3aedsii\pilha.h
+	<stdio.h>
+	"funcionarios.h"
+
+1615751709 source:c:\users\j.bragon\documents\ufop\aeds ii\grupo3aedsii\lista.c
+	<stdlib.h>
+	<stdio.h>
+	<string.h>
+	"lista.h"
+
+1615815844 source:c:\users\j.bragon\documents\ufop\aeds ii\grupo3aedsii\main.c
+	<stdlib.h>
+	"ordenacao_busca.h"
+	"lista.h"
+	"particoes.h"
+	"intercalacao.h"
+	"arvore_binaria.h"
+
+1613427796 c:\users\j.bragon\documents\ufop\aeds ii\grupo3aedsii\ordenacao_busca.h
+	<stdio.h>
+	"funcionarios.h"
+
+1615819418 c:\users\j.bragon\documents\ufop\aeds ii\grupo3aedsii\particoes.h
+	<stdio.h>
+	"lista.h"
+
+1615751784 source:c:\users\j.bragon\documents\ufop\aeds ii\grupo3aedsii\manipulacao_arquivos.c
+	<stdlib.h>
+	"manipulacao_arquivos.h"
+	"funcionarios.h"
+	"math.h"
+
+1615751767 c:\users\j.bragon\documents\ufop\aeds ii\grupo3aedsii\manipulacao_arquivos.h
+	<stdio.h>
+
+1616797175 source:c:\users\j.bragon\documents\ufop\aeds ii\grupo3aedsii\ordenacao_busca.c
+	<stdio.h>
+	<stdlib.h>
+	<math.h>
+	"funcionarios.h"
+
+1615750884 source:c:\users\j.bragon\documents\ufop\aeds ii\grupo3aedsii\pilha.c
+	"pilha.h"
+
+1617494983 source:c:\users\j.bragon\documents\ufop\aeds ii\grupo3aedsii\particoes.c
+	"funcionarios.h"
+	<stdlib.h>
+	<limits.h>
+	"particoes.h"
+
