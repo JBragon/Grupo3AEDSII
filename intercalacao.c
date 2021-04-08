@@ -4,6 +4,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+typedef struct no
+{
+    int info;
+    struct no *esq;
+    struct no *dir;
+} TNo;
+
 void intercalacao_basico(char *nome_arquivo_saida, int num_p, Lista *nome_particoes)
 {
 
@@ -103,12 +110,60 @@ void intercalacao_basico(char *nome_arquivo_saida, int num_p, Lista *nome_partic
 
 void intercalacao_arvore_de_vencedores(TPilha **pilha, int *vetTop, char *nome_arquivo_saida, int num_p)
 {
+
+    TNo *vetNo[num_p], *vetAuxNo[num_p], *n, *aux1, *aux2;
+    int flag = -1;
+
+    do
+    {
+        free(vetNo);
+        for (int i = 0; i < num_p; i++)
+        {
+            // vetNo[i] = *pilha[i]->
+            n->info = pilha[i]->p;
+            vetNo[i] = n;
+        }
+
+        if (vetNo[1] == NULL)
+        {
+
+            break;
+        }
+
+        do
+        {
+
+            aux1 = vetNo[0];
+            aux2 = vetNo[1];
+            //2x
+            for (int i = 0; i < num_p; i++)
+            {
+                if (i + 1 < num_p && vetNo[i+1] != NULL)
+                {
+                    vetNo[i] = vetNo[i + 1];
+                }
+                else
+                {
+                    vetNo[i] = NULL;
+                }
+            }
+            free(vetNo);
+
+            // 2) Criar um nó p para ser o pai desses dois, escolhendo o vencedor e ajustando os campos do nó
+            // criado de acordo
+            // 3) Adicionar o nó p no final da lista
+            // --O elemento que sobrou na lista é a raiz da árvore de vencedores
+
+        } while (vetNo[1] != NULL);
+
+    } while (flag == -1);
+
     /*
 
     Criar uma lista de nós vazia;
 
-    do{ comentario 
-
+    
+    do{
         zera a lista;
 
         Criar nós folha da árvore, e adicioná-los na lista
