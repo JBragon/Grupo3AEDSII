@@ -108,25 +108,74 @@ void intercalacao_basico(char *nome_arquivo_saida, int num_p, Lista *nome_partic
     }
 }
 
+void removePrimeiroItem(TNo *vetNo[], int num_p)
+{
+    for (int i = 0; i < num_p; i++)
+    {
+        if (i + 1 < num_p && vetNo[i + 1] != NULL)
+        {
+            vetNo[i] = vetNo[i + 1];
+        }
+        else
+        {
+            vetNo[i] = NULL;
+        }
+    }
+}
+
+void adicionaNaLista(TNo *vetNo[], TNo *tempNo, int num_p)
+{
+    for (int i = 0; i < num_p; i++)
+    {
+        if (vetNo[i + 1] == NULL)
+        {
+            vetNo[i] = tempNo;
+        }
+    }
+}
+
+void gravaFuncArquivoSaida(FILE *arquivoSaida, TPilha **pilha, TNo *vetNo[], TNo *tempNo, int num_p)
+{
+    for (int i = 0; i < num_p; i++)
+    {
+        for (int j = 0; j < num_p; j++)
+        {
+            if (vetNo[0]->info == pilha[j]->info)
+            {
+                //Gravar funcionario no arquivo
+                salva_ArqSaida(arquivoSaida, vetNo[0]->info, pilha[j]);
+
+                free(pilha[j]); // LIBERANDO O ITEM GRAVADO DA PILHA
+            }
+        }
+    }
+}
+
 void intercalacao_arvore_de_vencedores(TPilha **pilha, int *vetTop, char *nome_arquivo_saida, int num_p)
 {
 
-    TNo *vetNo[num_p], *vetAuxNo[num_p], *n, *aux1, *aux2;
+    TNo *vetNo[num_p], *n, *aux1, *aux2, *tempNo;
     int flag = -1;
+    FILE *arquivoSaida = fopen(nome_arquivo_saida, "a+b");
 
     do
     {
-        free(vetNo);
         for (int i = 0; i < num_p; i++)
         {
-            // vetNo[i] = *pilha[i]->
-            n->info = pilha[i]->p;
-            vetNo[i] = n;
+            if (pilha[i] != NULL)
+            {
+                n->info = pilha[i]->p;
+                vetNo[i] = n;
+            }
+            else
+            {
+                vetNo[i] = NULL;
+            }
         }
 
         if (vetNo[1] == NULL)
         {
-
+            gravaFuncArquivoSaida(arquivoSaida, pilha, vetNo, tempNo, num_p);
             break;
         }
 
@@ -134,27 +183,21 @@ void intercalacao_arvore_de_vencedores(TPilha **pilha, int *vetTop, char *nome_a
         {
 
             aux1 = vetNo[0];
-            aux2 = vetNo[1];
-            //2x
-            for (int i = 0; i < num_p; i++)
-            {
-                if (i + 1 < num_p && vetNo[i+1] != NULL)
-                {
-                    vetNo[i] = vetNo[i + 1];
-                }
-                else
-                {
-                    vetNo[i] = NULL;
-                }
-            }
-            free(vetNo);
+            removePrimeiroItem(vetNo, num_p);
 
-            // 2) Criar um nó p para ser o pai desses dois, escolhendo o vencedor e ajustando os campos do nó
-            // criado de acordo
-            // 3) Adicionar o nó p no final da lista
-            // --O elemento que sobrou na lista é a raiz da árvore de vencedores
+            aux2 = vetNo[0];
+            removePrimeiroItem(vetNo, num_p);
+
+            tempNo = NULL;
+            tempNo->esq = aux1;
+            tempNo->dir = aux2;
+            tempNo->info = aux1->info > aux2->info ? aux1->info : aux2->info;
+
+            adicionaNaLista(vetNo, tempNo, num_p);
 
         } while (vetNo[1] != NULL);
+
+        gravaFuncArquivoSaida(arquivoSaida, pilha, vetNo, tempNo, num_p);
 
     } while (flag == -1);
 
@@ -162,7 +205,7 @@ void intercalacao_arvore_de_vencedores(TPilha **pilha, int *vetTop, char *nome_a
 
     Criar uma lista de nós vazia;
 
-    
+
     do{
         zera a lista;
 
@@ -175,7 +218,7 @@ void intercalacao_arvore_de_vencedores(TPilha **pilha, int *vetTop, char *nome_a
             Coloca o elemento no arquivo de saída
             break;
         }
-            
+
         do{
 
             1) Retirar os 2 primeiros nós da lista
@@ -184,14 +227,14 @@ void intercalacao_arvore_de_vencedores(TPilha **pilha, int *vetTop, char *nome_a
             3) Adicionar o nó p no final da lista
             --O elemento que sobrou na lista é a raiz da árvore de vencedores
 
-        }while(Enquanto lista tiver mais de 1 elemento) 
+        }while(Enquanto lista tiver mais de 1 elemento)
 
         Pegar a raiz da primeira posição
 
-        Alocar no arquivo de saída 
+        Alocar no arquivo de saída
 
         desempilhar o elemento equivalente ao raiz, na pilha;
-        
+
     }while(flag == -1)
 
     */
