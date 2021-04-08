@@ -107,7 +107,7 @@ void intercalacao_arvore_de_vencedores(TPilha **pilha, int *vetTop, char *nome_a
 
     Criar uma lista de nós vazia;
 
-    do{
+    do{ comentario 
 
         zera a lista;
 
