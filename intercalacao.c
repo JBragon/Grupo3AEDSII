@@ -186,7 +186,10 @@ void intercalacao_arvore_de_vencedores(TPilha **pilha, int *vetTop, char *nome_a
             {
                 printf("vetNo[%d] =======> %d \n", i, vetNo[i]->info);
             }
+
+            //TODO - Fazer malloc aqui
             TNo *aux1, *aux2;
+            
             TNo *n = (TNo *)malloc(sizeof(TNo));
             aux1 = vetNo[0];
             removePrimeiroItem(vetNo, num_p);
