@@ -127,7 +127,7 @@ void adicionaNaLista(TNo *vetNo[], TNo *tempNo, int num_p)
 {
     for (int i = 0; i < num_p; i++)
     {
-        if (vetNo[i + 1] == NULL)
+        if (vetNo[i] == NULL)
         {
             vetNo[i] = tempNo;
         }
@@ -138,15 +138,13 @@ void gravaFuncArquivoSaida(FILE *arquivoSaida, TPilha **pilha, TNo *vetNo[], TNo
 {
     for (int i = 0; i < num_p; i++)
     {
-        for (int j = 0; j < num_p; j++)
+        if (vetNo[0]->info == pilha[i]->info->cod)
         {
-            if (vetNo[0]->info == pilha[j]->info)
-            {
-                //Gravar funcionario no arquivo
-                salva_ArqSaida(arquivoSaida, vetNo[0]->info, pilha[j]);
+            //Gravar funcionario no arquivo
+            salva_ArqSaida(arquivoSaida, vetNo[0]->info, pilha[i]);
 
-                free(pilha[j]); // LIBERANDO O ITEM GRAVADO DA PILHA
-            }
+            //TODO: Corrigir - método de remoção errado, usar o pop
+            free(pilha[i]); // LIBERANDO O ITEM GRAVADO DA PILHA
         }
     }
 }
@@ -154,7 +152,7 @@ void gravaFuncArquivoSaida(FILE *arquivoSaida, TPilha **pilha, TNo *vetNo[], TNo
 void intercalacao_arvore_de_vencedores(TPilha **pilha, int *vetTop, char *nome_arquivo_saida, int num_p)
 {
 
-    TNo *vetNo[num_p], *n, *aux1, *aux2, *tempNo;
+    TNo *vetNo[num_p], *tempNo;
     int flag = -1;
     FILE *arquivoSaida = fopen(nome_arquivo_saida, "a+b");
 
@@ -164,7 +162,10 @@ void intercalacao_arvore_de_vencedores(TPilha **pilha, int *vetTop, char *nome_a
         {
             if (pilha[i] != NULL)
             {
-                n->info = pilha[i]->p;
+                TNo *n = (TNo *)malloc(sizeof(TNo));
+
+                n->info = pilha[i]->info->cod;
+
                 vetNo[i] = n;
             }
             else
@@ -181,7 +182,12 @@ void intercalacao_arvore_de_vencedores(TPilha **pilha, int *vetTop, char *nome_a
 
         do
         {
-
+            for (int i = 0; i < num_p; i++)
+            {
+                printf("vetNo[%d] =======> %d \n", i, vetNo[i]->info);
+            }
+            TNo *aux1, *aux2;
+            TNo *n = (TNo *)malloc(sizeof(TNo));
             aux1 = vetNo[0];
             removePrimeiroItem(vetNo, num_p);
 
@@ -189,11 +195,21 @@ void intercalacao_arvore_de_vencedores(TPilha **pilha, int *vetTop, char *nome_a
             removePrimeiroItem(vetNo, num_p);
 
             tempNo = NULL;
-            tempNo->esq = aux1;
-            tempNo->dir = aux2;
-            tempNo->info = aux1->info > aux2->info ? aux1->info : aux2->info;
 
-            adicionaNaLista(vetNo, tempNo, num_p);
+            for (int i = 0; i < num_p; i++)
+            {
+                printf("vetNo[%d] =======> %d \n", i, vetNo[i]->info);
+            }
+
+            printf("A =======> %d \n", aux1->info);
+            printf("B =======> %d\n", aux2->info);
+            int teste = aux1->info > aux2->info ? aux2->info : aux1->info;
+
+            n->info = teste;
+            n->esq = aux1;
+            n->dir = aux2;
+
+            adicionaNaLista(vetNo, n, num_p);
 
         } while (vetNo[1] != NULL);
 

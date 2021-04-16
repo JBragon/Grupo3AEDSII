@@ -432,7 +432,7 @@
 	<string.h>
 	"funcionarios.h"
 
-1615750279 source:c:\users\j.bragon\documents\ufop\aeds ii\grupo3aedsii\intercalacao.c
+1618604174 source:c:\users\j.bragon\documents\ufop\aeds ii\grupo3aedsii\intercalacao.c
 	"intercalacao.h"
 	"funcionarios.h"
 	<limits.h>
@@ -455,7 +455,7 @@
 	<string.h>
 	"lista.h"
 
-1615815844 source:c:\users\j.bragon\documents\ufop\aeds ii\grupo3aedsii\main.c
+1617837551 source:c:\users\j.bragon\documents\ufop\aeds ii\grupo3aedsii\main.c
 	<stdlib.h>
 	"ordenacao_busca.h"
 	"lista.h"
