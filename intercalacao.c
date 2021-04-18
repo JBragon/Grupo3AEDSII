@@ -108,7 +108,7 @@ void intercalacao_basico(char *nome_arquivo_saida, int num_p, Lista *nome_partic
     }
 }
 
-void removePrimeiroItem(TNo *vetNo[], int num_p)
+void removePrimeiroItem(TNo *vetNo[], int *num_p)
 {
     for (int i = 0; i < num_p; i++)
     {
@@ -121,6 +121,7 @@ void removePrimeiroItem(TNo *vetNo[], int num_p)
             vetNo[i] = NULL;
         }
     }
+
 }
 
 void adicionaNaLista(TNo *vetNo[], TNo *tempNo, int num_p)
@@ -130,11 +131,12 @@ void adicionaNaLista(TNo *vetNo[], TNo *tempNo, int num_p)
         if (vetNo[i] == NULL)
         {
             vetNo[i] = tempNo;
+            break;
         }
     }
 }
 
-void gravaFuncArquivoSaida(FILE *arquivoSaida, TPilha **pilha, TNo *vetNo[], TNo *tempNo, int num_p)
+void gravaFuncArquivoSaida(FILE *arquivoSaida, TPilha **pilha, TNo *vetNo[], int num_p)
 {
     for (int i = 0; i < num_p; i++)
     {
@@ -143,8 +145,8 @@ void gravaFuncArquivoSaida(FILE *arquivoSaida, TPilha **pilha, TNo *vetNo[], TNo
             //Gravar funcionario no arquivo
             salva_ArqSaida(arquivoSaida, vetNo[0]->info, pilha[i]);
 
-            //TODO: Corrigir - método de remoção errado, usar o pop
-            free(pilha[i]); // LIBERANDO O ITEM GRAVADO DA PILHA
+            //TODO: Corrigir - método de remoção errado, usar o pop,
+            pop(pilha, i, 2);
         }
     }
 }
@@ -152,18 +154,18 @@ void gravaFuncArquivoSaida(FILE *arquivoSaida, TPilha **pilha, TNo *vetNo[], TNo
 void intercalacao_arvore_de_vencedores(TPilha **pilha, int *vetTop, char *nome_arquivo_saida, int num_p)
 {
 
-    TNo *vetNo[num_p], *tempNo;
-    int flag = -1;
+    TNo *vetNo[num_p];
     FILE *arquivoSaida = fopen(nome_arquivo_saida, "a+b");
 
     do
     {
         for (int i = 0; i < num_p; i++)
         {
-            if (pilha[i] != NULL)
+            if (pilha[i] != NULL && pilha[i]->info->cod != NULL)
             {
                 TNo *n = (TNo *)malloc(sizeof(TNo));
 
+                printf("pilha[%d]->info->cod =======> %d \n", i, pilha[i]->info->cod);
                 n->info = pilha[i]->info->cod;
 
                 vetNo[i] = n;
@@ -174,9 +176,10 @@ void intercalacao_arvore_de_vencedores(TPilha **pilha, int *vetTop, char *nome_a
             }
         }
 
+        //TODO - Melhorar essa lógica
         if (vetNo[1] == NULL)
         {
-            gravaFuncArquivoSaida(arquivoSaida, pilha, vetNo, tempNo, num_p);
+            gravaFuncArquivoSaida(arquivoSaida, pilha, vetNo, num_p);
             break;
         }
 
@@ -184,31 +187,24 @@ void intercalacao_arvore_de_vencedores(TPilha **pilha, int *vetTop, char *nome_a
         {
             for (int i = 0; i < num_p; i++)
             {
-                printf("vetNo[%d] =======> %d \n", i, vetNo[i]->info);
+                if(vetNo[i] != NULL)
+                    printf("vetNo[%d] =======> %d \n", i, vetNo[i]->info);
             }
 
-            //TODO - Fazer malloc aqui
-            TNo *aux1, *aux2;
-            
+            TNo *aux1 = (TNo *)malloc(sizeof(TNo));
+            TNo *aux2 = (TNo *)malloc(sizeof(TNo));
             TNo *n = (TNo *)malloc(sizeof(TNo));
+
             aux1 = vetNo[0];
             removePrimeiroItem(vetNo, num_p);
 
             aux2 = vetNo[0];
             removePrimeiroItem(vetNo, num_p);
 
-            tempNo = NULL;
-
-            for (int i = 0; i < num_p; i++)
-            {
-                printf("vetNo[%d] =======> %d \n", i, vetNo[i]->info);
-            }
-
             printf("A =======> %d \n", aux1->info);
             printf("B =======> %d\n", aux2->info);
-            int teste = aux1->info > aux2->info ? aux2->info : aux1->info;
 
-            n->info = teste;
+            n->info = aux1->info > aux2->info ? aux2->info : aux1->info;
             n->esq = aux1;
             n->dir = aux2;
 
@@ -216,9 +212,9 @@ void intercalacao_arvore_de_vencedores(TPilha **pilha, int *vetTop, char *nome_a
 
         } while (vetNo[1] != NULL);
 
-        gravaFuncArquivoSaida(arquivoSaida, pilha, vetNo, tempNo, num_p);
+        gravaFuncArquivoSaida(arquivoSaida, pilha, vetNo, num_p);
 
-    } while (flag == -1);
+    } while (1 == 1);
 
     /*
 
