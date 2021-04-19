@@ -121,7 +121,6 @@ void removePrimeiroItem(TNo *vetNo[], int *num_p)
             vetNo[i] = NULL;
         }
     }
-
 }
 
 void adicionaNaLista(TNo *vetNo[], TNo *tempNo, int num_p)
@@ -143,10 +142,24 @@ void gravaFuncArquivoSaida(FILE *arquivoSaida, TPilha **pilha, TNo *vetNo[], int
         if (vetNo[0]->info == pilha[i]->info->cod)
         {
             //Gravar funcionario no arquivo
-            salva_ArqSaida(arquivoSaida, vetNo[0]->info, pilha[i]);
+            salva_ArqSaida(arquivoSaida, i, pilha[i]->info);
+
+            for (int j = i; j < num_p; j++)
+            {
+                if (j + 1 < num_p && pilha[j + 1] != NULL)
+                {
+                    pilha[j] = pilha[j + 1];
+                }
+                else
+                {
+                    pilha[j] = NULL;
+                }
+            }
+
+            break;
 
             //TODO: Corrigir - método de remoção errado, usar o pop,
-            pop(pilha, i, 2);
+            //pop(pilha, i, 2);
         }
     }
 }
@@ -159,15 +172,13 @@ void intercalacao_arvore_de_vencedores(TPilha **pilha, int *vetTop, char *nome_a
 
     do
     {
+
         for (int i = 0; i < num_p; i++)
         {
             if (pilha[i] != NULL && pilha[i]->info->cod != NULL)
             {
                 TNo *n = (TNo *)malloc(sizeof(TNo));
-
-                printf("pilha[%d]->info->cod =======> %d \n", i, pilha[i]->info->cod);
                 n->info = pilha[i]->info->cod;
-
                 vetNo[i] = n;
             }
             else
@@ -187,7 +198,7 @@ void intercalacao_arvore_de_vencedores(TPilha **pilha, int *vetTop, char *nome_a
         {
             for (int i = 0; i < num_p; i++)
             {
-                if(vetNo[i] != NULL)
+                if (vetNo[i] != NULL)
                     printf("vetNo[%d] =======> %d \n", i, vetNo[i]->info);
             }
 
