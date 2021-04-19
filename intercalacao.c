@@ -136,6 +136,21 @@ void adicionaNaLista(TNo *vetNo[], TNo *tempNo, int num_p)
     }
 }
 
+void removeDaPilha(TPilha **pilha, int indiceDoRegistro, int num_p)
+{
+    for (int j = indiceDoRegistro; j < num_p; j++)
+    {
+        if (j + 1 < num_p && pilha[j + 1] != NULL)
+        {
+            pilha[j] = pilha[j + 1];
+        }
+        else
+        {
+            pilha[j] = NULL;
+        }
+    }
+}
+
 void gravaFuncArquivoSaida(FILE *arquivoSaida, TPilha **pilha, TNo *vetNo[], int num_p)
 {
     for (int i = 0; i < num_p; i++)
@@ -146,18 +161,8 @@ void gravaFuncArquivoSaida(FILE *arquivoSaida, TPilha **pilha, TNo *vetNo[], int
             salva_ArqSaida(arquivoSaida, i, pilha[i]->info);
 
             //Removendo item gravado da pilha
-            for (int j = i; j < num_p; j++)
-            {
-                if (j + 1 < num_p && pilha[j + 1] != NULL)
-                {
-                    pilha[j] = pilha[j + 1];
-                }
-                else
-                {
-                    pilha[j] = NULL;
-                }
-            }
-
+            removeDaPilha(pilha, i, num_p);
+            
             //Ao gravar o item, não tem necessidade de ir para a próxima iteração
             break;
         }
@@ -173,6 +178,7 @@ void intercalacao_arvore_de_vencedores(TPilha **pilha, int *vetTop, char *nome_a
     do
     {
 
+        //Populando a lista de nós para fazer a classificação
         for (int i = 0; i < num_p; i++)
         {
             if (pilha[i] != NULL && pilha[i]->info->cod != NULL)
@@ -188,7 +194,7 @@ void intercalacao_arvore_de_vencedores(TPilha **pilha, int *vetTop, char *nome_a
         }
 
         //Se possuir somente um item no vetor de No
-        //É pq a classificação ja chegou ao fim e necessita somente de gravar 
+        //É pq a classificação ja chegou ao fim e necessita somente de gravar
         //o item no arquivo de saida
         if (vetNo[1] == NULL)
         {
@@ -205,8 +211,13 @@ void intercalacao_arvore_de_vencedores(TPilha **pilha, int *vetTop, char *nome_a
                     printf("vetNo[%d] =======> %d \n", i, vetNo[i]->info);
             }
 
+            //Nós de comparação
             TNo *aux1 = (TNo *)malloc(sizeof(TNo));
             TNo *aux2 = (TNo *)malloc(sizeof(TNo));
+
+            //Novo nó que será adicionado ao fim da lista
+            //após a definição do vencedor, no qual será alocado
+            //na raiz deste nó
             TNo *n = (TNo *)malloc(sizeof(TNo));
 
             aux1 = vetNo[0];
@@ -228,7 +239,7 @@ void intercalacao_arvore_de_vencedores(TPilha **pilha, int *vetTop, char *nome_a
 
         //Ao achar o vencedor entre todos os números
         //Ele é gravado no arquivo de saída
-        //Para que o algorítmo reinicie e ache o próximo 
+        //Para que o algorítmo reinicie e ache o próximo
         //vencedor entre os restantes na pilha
         gravaFuncArquivoSaida(arquivoSaida, pilha, vetNo, num_p);
 
