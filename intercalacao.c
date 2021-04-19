@@ -125,6 +125,7 @@ void removePrimeiroItem(TNo *vetNo[], int *num_p)
 
 void adicionaNaLista(TNo *vetNo[], TNo *tempNo, int num_p)
 {
+    //Método que adiciona o nó no fim da lista
     for (int i = 0; i < num_p; i++)
     {
         if (vetNo[i] == NULL)
@@ -144,6 +145,7 @@ void gravaFuncArquivoSaida(FILE *arquivoSaida, TPilha **pilha, TNo *vetNo[], int
             //Gravar funcionario no arquivo
             salva_ArqSaida(arquivoSaida, i, pilha[i]->info);
 
+            //Removendo item gravado da pilha
             for (int j = i; j < num_p; j++)
             {
                 if (j + 1 < num_p && pilha[j + 1] != NULL)
@@ -156,10 +158,8 @@ void gravaFuncArquivoSaida(FILE *arquivoSaida, TPilha **pilha, TNo *vetNo[], int
                 }
             }
 
+            //Ao gravar o item, não tem necessidade de ir para a próxima iteração
             break;
-
-            //TODO: Corrigir - método de remoção errado, usar o pop,
-            //pop(pilha, i, 2);
         }
     }
 }
@@ -187,13 +187,16 @@ void intercalacao_arvore_de_vencedores(TPilha **pilha, int *vetTop, char *nome_a
             }
         }
 
-        //TODO - Melhorar essa lógica
+        //Se possuir somente um item no vetor de No
+        //É pq a classificação ja chegou ao fim e necessita somente de gravar 
+        //o item no arquivo de saida
         if (vetNo[1] == NULL)
         {
             gravaFuncArquivoSaida(arquivoSaida, pilha, vetNo, num_p);
             break;
         }
 
+        //Classificação do vencedor entre os dois primeiros nós da lista
         do
         {
             for (int i = 0; i < num_p; i++)
@@ -223,6 +226,10 @@ void intercalacao_arvore_de_vencedores(TPilha **pilha, int *vetTop, char *nome_a
 
         } while (vetNo[1] != NULL);
 
+        //Ao achar o vencedor entre todos os números
+        //Ele é gravado no arquivo de saída
+        //Para que o algorítmo reinicie e ache o próximo 
+        //vencedor entre os restantes na pilha
         gravaFuncArquivoSaida(arquivoSaida, pilha, vetNo, num_p);
 
     } while (1 == 1);
