@@ -6,8 +6,8 @@
 
 typedef struct no
 {
-    int info;
-    //int indiceParticao;
+    int codFuncionario;
+    int indiceParticao;
     struct no *esq;
     struct no *dir;
 } TNo;
@@ -109,7 +109,7 @@ void intercalacao_basico(char *nome_arquivo_saida, int num_p, Lista *nome_partic
     }
 }
 
-void removePrimeiroItem(TNo *vetNo[], int *num_p)
+void removerPrimeiroItem(TNo *vetNo[], int *num_p)
 {
     for (int i = 0; i < num_p; i++)
     {
@@ -124,7 +124,7 @@ void removePrimeiroItem(TNo *vetNo[], int *num_p)
     }
 }
 
-void adicionaNaLista(TNo *vetNo[], TNo *tempNo, int num_p)
+void adicionarFimLista(TNo *vetNo[], TNo *tempNo, int num_p)
 {
     //Método que adiciona o nó no fim da lista
     for (int i = 0; i < num_p; i++)
@@ -137,19 +137,17 @@ void adicionaNaLista(TNo *vetNo[], TNo *tempNo, int num_p)
     }
 }
 
-void removeDaPilha(TPilha **pilha, int indiceDoRegistro, int num_p)
+void gravarFuncionario(TPilha **pilha, int *vetTop, FILE *arquivoSaida, int *posArqSaida, int indiceParticao)
 {
-    for (int j = indiceDoRegistro; j < num_p; j++)
-    {
-        if (j + 1 < num_p && pilha[j + 1] != NULL)
-        {
-            pilha[j] = pilha[j + 1];
-        }
-        else
-        {
-            pilha[j] = NULL;
-        }
-    }
+    TFunc *funcionario = peek_func(pilha[indiceParticao], 0, &vetTop[indiceParticao]);
+    printf("Cod: %d Funcionario: %s \n", funcionario->cod, funcionario->nome);
+
+    //Gravar funcionario no arquivo
+    salva_ArqSaida(arquivoSaida, posArqSaida, funcionario);
+    posArqSaida++;
+
+    //Removendo item gravado da pilha
+    pop(pilha[indiceParticao], 0, &vetTop[indiceParticao]);
 }
 
 void intercalacao_arvore_de_vencedores(TPilha **pilha, int *vetTop, char *nome_arquivo_saida, int num_p)
@@ -172,10 +170,10 @@ void intercalacao_arvore_de_vencedores(TPilha **pilha, int *vetTop, char *nome_a
 
                 //Usar o peek_func
                 TFunc *funcionario = peek_func(pilha[i], 0, &vetTop[i]);
-                // printf("funcionario->cod =======> %d\n", funcionario->cod);
-                // printf("vetTop[%d] =======> %d\n", i, vetTop[i]);
-                n->info = funcionario->cod;
-                //n->indiceParticao = i;
+                
+                n->codFuncionario = funcionario->cod;
+                n->indiceParticao = i;
+                
                 vetNo[indiceVetorNo] = n;
                 indiceVetorNo++;
             }
@@ -186,126 +184,44 @@ void intercalacao_arvore_de_vencedores(TPilha **pilha, int *vetTop, char *nome_a
         //o item no arquivo de saida
         if (vetNo[1] == NULL)
         {
-            for (int i = 0; i < num_p; i++)
-            {
-                if (vetTop[i] >= 0)
-                {
-                    TFunc *funcionario = peek_func(pilha[i], 0, &vetTop[i]);
-                    if (vetNo[0]->info == funcionario->cod)
-                    {
-                        //Gravar funcionario no arquivo
-                        salva_ArqSaida(arquivoSaida, posArqSaida, funcionario);
-                        posArqSaida++;
-
-                        //Removendo item gravado da pilha
-                        //removeDaPilha(pilha, i, num_p);
-                        pop(pilha[i], 0, &vetTop[i]);
-
-                        //Ao gravar o item, não tem necessidade de ir para a próxima iteração
-                        break;
-                    }
-                }
-            }
+            gravarFuncionario(pilha, vetTop, &arquivoSaida, &posArqSaida, vetNo[0]->indiceParticao);
             break;
         }
 
         //Classificação do vencedor entre os dois primeiros nós da lista
         do
         {
-            // for (int i = 0; i < num_p; i++)
-            // {
-            //     if (vetNo[i] != NULL)
-            //         printf("vetNo[%d] =======> %d \n", i, vetNo[i]->info);
-            // }
 
             //Nós de comparação
-            TNo *aux1 = (TNo *)malloc(sizeof(TNo));
-            TNo *aux2 = (TNo *)malloc(sizeof(TNo));
+            TNo *noEsquerda = (TNo *)malloc(sizeof(TNo));
+            TNo *noDireita = (TNo *)malloc(sizeof(TNo));
 
             //Novo nó que será adicionado ao fim da lista
             //após a definição do vencedor, no qual será alocado
             //na raiz deste nó
             TNo *n = (TNo *)malloc(sizeof(TNo));
 
-            aux1 = vetNo[0];
-            removePrimeiroItem(vetNo, num_p);
+            noEsquerda = vetNo[0];
+            removerPrimeiroItem(vetNo, num_p);
 
-            aux2 = vetNo[0];
-            removePrimeiroItem(vetNo, num_p);
+            noDireita = vetNo[0];
+            removerPrimeiroItem(vetNo, num_p);
 
-            // printf("A =======> %d \n", aux1->info);
-            // printf("B =======> %d\n", aux2->info);
+            //Definindo vencedor entre os dois nós
+            n->codFuncionario = noEsquerda->codFuncionario > noDireita->codFuncionario ? noDireita->codFuncionario : noEsquerda->codFuncionario;
+            n->indiceParticao = noEsquerda->codFuncionario > noDireita->codFuncionario ? noDireita->indiceParticao : noEsquerda->indiceParticao;
+            n->esq = noEsquerda;
+            n->dir = noDireita;
 
-            n->info = aux1->info > aux2->info ? aux2->info : aux1->info;
-            n->esq = aux1;
-            n->dir = aux2;
-
-            adicionaNaLista(vetNo, n, num_p);
+            adicionarFimLista(vetNo, n, num_p);
 
         } while (vetNo[1] != NULL);
 
         //Ao achar o vencedor entre todos os números
-        //Ele é gravado no arquivo de saída
+        //Ele é gravado no arquivo de saída e retirado da pilha
         //Para que o algorítmo reinicie e ache o próximo
         //vencedor entre os restantes na pilha
-        for (int i = 0; i < num_p; i++)
-        {
-            if (vetTop[i] >= 0)
-            {
-                TFunc *funcionario = peek_func(pilha[i], 0, &vetTop[i]);
-                if (vetNo[0]->info == funcionario->cod)
-                {
-                    //Gravar funcionario no arquivo
-                    salva_ArqSaida(arquivoSaida, posArqSaida, funcionario);
-                    posArqSaida++;
-
-                    //Removendo item gravado da pilha
-                    //removeDaPilha(pilha, i, num_p);
-                    pop(pilha[i], 0, &vetTop[i]);
-
-                    //Ao gravar o item, não tem necessidade de ir para a próxima iteração
-                    break;
-                }
-            }
-        }
+        gravarFuncionario(pilha, vetTop, &arquivoSaida, &posArqSaida, vetNo[0]->indiceParticao);
 
     } while (1 == 1);
-
-    /*
-
-    Criar uma lista de nós vazia;
-
-
-    do{
-        zera a lista;
-
-        Criar nós folha da árvore, e adicioná-los na lista
-
-        Pegar o primeiro elemento de cada pilha e inserir na raiz de cada nó;
-
-        Se a lista de nós possuir somente um elemento
-        {
-            Coloca o elemento no arquivo de saída
-            break;
-        }
-
-        do{
-
-            1) Retirar os 2 primeiros nós da lista
-            2) Criar um nó p para ser o pai desses dois, escolhendo o vencedor e ajustando os campos do nó
-            criado de acordo
-            3) Adicionar o nó p no final da lista
-            --O elemento que sobrou na lista é a raiz da árvore de vencedores
-
-        }while(Enquanto lista tiver mais de 1 elemento)
-
-        Pegar a raiz da primeira posição
-
-        Alocar no arquivo de saída
-
-        desempilhar o elemento equivalente ao raiz, na pilha;
-
-    }while(flag == -1)
-
-    */
 }
