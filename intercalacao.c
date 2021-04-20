@@ -157,28 +157,27 @@ void intercalacao_arvore_de_vencedores(TPilha **pilha, int *vetTop, char *nome_a
 
     TNo *vetNo[num_p];
     FILE *arquivoSaida = fopen(nome_arquivo_saida, "a+b");
-
+    int posArqSaida = 0;
     do
     {
+
+        int indiceVetorNo = 0;
 
         //Populando a lista de nós para fazer a classificação
         for (int i = 0; i < num_p; i++)
         {
-            if (pilha[i] != NULL && pilha[i]->info->cod != NULL)
+            if (vetTop[i] >= 0)
             {
                 TNo *n = (TNo *)malloc(sizeof(TNo));
 
                 //Usar o peek_func
                 TFunc *funcionario = peek_func(pilha[i], 0, &vetTop[i]);
-                printf("funcionario->cod =======> %d\n", funcionario->cod);
-                printf("vetTop[%d] =======> %d\n", i, vetTop[i]);
+                // printf("funcionario->cod =======> %d\n", funcionario->cod);
+                // printf("vetTop[%d] =======> %d\n", i, vetTop[i]);
                 n->info = funcionario->cod;
                 //n->indiceParticao = i;
-                vetNo[i] = n;
-            }
-            else
-            {
-                vetNo[i] = NULL;
+                vetNo[indiceVetorNo] = n;
+                indiceVetorNo++;
             }
         }
 
@@ -189,17 +188,22 @@ void intercalacao_arvore_de_vencedores(TPilha **pilha, int *vetTop, char *nome_a
         {
             for (int i = 0; i < num_p; i++)
             {
-                if (vetNo[0]->info == pilha[i]->info->cod)
+                if (vetTop[i] >= 0)
                 {
-                    //Gravar funcionario no arquivo
-                    salva_ArqSaida(arquivoSaida, i, pilha[i]->info);
+                    TFunc *funcionario = peek_func(pilha[i], 0, &vetTop[i]);
+                    if (vetNo[0]->info == funcionario->cod)
+                    {
+                        //Gravar funcionario no arquivo
+                        salva_ArqSaida(arquivoSaida, posArqSaida, funcionario);
+                        posArqSaida++;
 
-                    //Removendo item gravado da pilha
-                    //removeDaPilha(pilha, i, num_p);
-                    pop(pilha[i], 0, &vetTop[i]);
+                        //Removendo item gravado da pilha
+                        //removeDaPilha(pilha, i, num_p);
+                        pop(pilha[i], 0, &vetTop[i]);
 
-                    //Ao gravar o item, não tem necessidade de ir para a próxima iteração
-                    break;
+                        //Ao gravar o item, não tem necessidade de ir para a próxima iteração
+                        break;
+                    }
                 }
             }
             break;
@@ -208,11 +212,11 @@ void intercalacao_arvore_de_vencedores(TPilha **pilha, int *vetTop, char *nome_a
         //Classificação do vencedor entre os dois primeiros nós da lista
         do
         {
-            for (int i = 0; i < num_p; i++)
-            {
-                if (vetNo[i] != NULL)
-                    printf("vetNo[%d] =======> %d \n", i, vetNo[i]->info);
-            }
+            // for (int i = 0; i < num_p; i++)
+            // {
+            //     if (vetNo[i] != NULL)
+            //         printf("vetNo[%d] =======> %d \n", i, vetNo[i]->info);
+            // }
 
             //Nós de comparação
             TNo *aux1 = (TNo *)malloc(sizeof(TNo));
@@ -229,8 +233,8 @@ void intercalacao_arvore_de_vencedores(TPilha **pilha, int *vetTop, char *nome_a
             aux2 = vetNo[0];
             removePrimeiroItem(vetNo, num_p);
 
-            printf("A =======> %d \n", aux1->info);
-            printf("B =======> %d\n", aux2->info);
+            // printf("A =======> %d \n", aux1->info);
+            // printf("B =======> %d\n", aux2->info);
 
             n->info = aux1->info > aux2->info ? aux2->info : aux1->info;
             n->esq = aux1;
@@ -246,17 +250,22 @@ void intercalacao_arvore_de_vencedores(TPilha **pilha, int *vetTop, char *nome_a
         //vencedor entre os restantes na pilha
         for (int i = 0; i < num_p; i++)
         {
-            if (vetNo[0]->info == pilha[i]->info->cod)
+            if (vetTop[i] >= 0)
             {
-                //Gravar funcionario no arquivo
-                salva_ArqSaida(arquivoSaida, i, pilha[i]->info);
+                TFunc *funcionario = peek_func(pilha[i], 0, &vetTop[i]);
+                if (vetNo[0]->info == funcionario->cod)
+                {
+                    //Gravar funcionario no arquivo
+                    salva_ArqSaida(arquivoSaida, posArqSaida, funcionario);
+                    posArqSaida++;
 
-                //Removendo item gravado da pilha
-                //removeDaPilha(pilha, i, num_p);
-                pop(pilha[i], 0, &vetTop[i]);
+                    //Removendo item gravado da pilha
+                    //removeDaPilha(pilha, i, num_p);
+                    pop(pilha[i], 0, &vetTop[i]);
 
-                //Ao gravar o item, não tem necessidade de ir para a próxima iteração
-                break;
+                    //Ao gravar o item, não tem necessidade de ir para a próxima iteração
+                    break;
+                }
             }
         }
 
