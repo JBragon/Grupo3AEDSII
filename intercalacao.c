@@ -156,6 +156,9 @@ void intercalacao_arvore_de_vencedores(TPilha **pilha, int *vetTop, char *nome_a
     TNo *vetNo[num_p];
     FILE *arquivoSaida = fopen(nome_arquivo_saida, "a+b");
     int posArqSaida = 0;
+
+    printf("\n\n**************************** RESULTADO INTERCALACAO ****************************\n\n");
+
     do
     {
 
@@ -170,10 +173,10 @@ void intercalacao_arvore_de_vencedores(TPilha **pilha, int *vetTop, char *nome_a
 
                 //Usar o peek_func
                 TFunc *funcionario = peek_func(pilha[i], 0, &vetTop[i]);
-                
+
                 n->codFuncionario = funcionario->cod;
                 n->indiceParticao = i;
-                
+
                 vetNo[indiceVetorNo] = n;
                 indiceVetorNo++;
             }
