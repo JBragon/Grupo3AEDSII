@@ -432,7 +432,7 @@
 	<string.h>
 	"funcionarios.h"
 
-1618841277 source:c:\users\j.bragon\documents\ufop\aeds ii\grupo3aedsii\intercalacao.c
+1618878177 source:c:\users\j.bragon\documents\ufop\aeds ii\grupo3aedsii\intercalacao.c
 	"intercalacao.h"
 	"funcionarios.h"
 	<limits.h>
@@ -445,7 +445,7 @@
 
 1615751750 c:\users\j.bragon\documents\ufop\aeds ii\grupo3aedsii\lista.h
 
-1616797160 c:\users\j.bragon\documents\ufop\aeds ii\grupo3aedsii\pilha.h
+1618874696 c:\users\j.bragon\documents\ufop\aeds ii\grupo3aedsii\pilha.h
 	<stdio.h>
 	"funcionarios.h"
 
@@ -486,7 +486,7 @@
 	<math.h>
 	"funcionarios.h"
 
-1615750884 source:c:\users\j.bragon\documents\ufop\aeds ii\grupo3aedsii\pilha.c
+1618874361 source:c:\users\j.bragon\documents\ufop\aeds ii\grupo3aedsii\pilha.c
 	"pilha.h"
 
 1617494983 source:c:\users\j.bragon\documents\ufop\aeds ii\grupo3aedsii\particoes.c

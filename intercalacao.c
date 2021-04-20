@@ -7,6 +7,7 @@
 typedef struct no
 {
     int info;
+    //int indiceParticao;
     struct no *esq;
     struct no *dir;
 } TNo;
@@ -151,24 +152,6 @@ void removeDaPilha(TPilha **pilha, int indiceDoRegistro, int num_p)
     }
 }
 
-void gravaFuncArquivoSaida(FILE *arquivoSaida, TPilha **pilha, TNo *vetNo[], int num_p)
-{
-    for (int i = 0; i < num_p; i++)
-    {
-        if (vetNo[0]->info == pilha[i]->info->cod)
-        {
-            //Gravar funcionario no arquivo
-            salva_ArqSaida(arquivoSaida, i, pilha[i]->info);
-
-            //Removendo item gravado da pilha
-            removeDaPilha(pilha, i, num_p);
-            
-            //Ao gravar o item, não tem necessidade de ir para a próxima iteração
-            break;
-        }
-    }
-}
-
 void intercalacao_arvore_de_vencedores(TPilha **pilha, int *vetTop, char *nome_arquivo_saida, int num_p)
 {
 
@@ -184,7 +167,13 @@ void intercalacao_arvore_de_vencedores(TPilha **pilha, int *vetTop, char *nome_a
             if (pilha[i] != NULL && pilha[i]->info->cod != NULL)
             {
                 TNo *n = (TNo *)malloc(sizeof(TNo));
-                n->info = pilha[i]->info->cod;
+
+                //Usar o peek_func
+                TFunc *funcionario = peek_func(pilha[i], 0, &vetTop[i]);
+                printf("funcionario->cod =======> %d\n", funcionario->cod);
+                printf("vetTop[%d] =======> %d\n", i, vetTop[i]);
+                n->info = funcionario->cod;
+                //n->indiceParticao = i;
                 vetNo[i] = n;
             }
             else
@@ -198,7 +187,21 @@ void intercalacao_arvore_de_vencedores(TPilha **pilha, int *vetTop, char *nome_a
         //o item no arquivo de saida
         if (vetNo[1] == NULL)
         {
-            gravaFuncArquivoSaida(arquivoSaida, pilha, vetNo, num_p);
+            for (int i = 0; i < num_p; i++)
+            {
+                if (vetNo[0]->info == pilha[i]->info->cod)
+                {
+                    //Gravar funcionario no arquivo
+                    salva_ArqSaida(arquivoSaida, i, pilha[i]->info);
+
+                    //Removendo item gravado da pilha
+                    //removeDaPilha(pilha, i, num_p);
+                    pop(pilha[i], 0, &vetTop[i]);
+
+                    //Ao gravar o item, não tem necessidade de ir para a próxima iteração
+                    break;
+                }
+            }
             break;
         }
 
@@ -241,7 +244,21 @@ void intercalacao_arvore_de_vencedores(TPilha **pilha, int *vetTop, char *nome_a
         //Ele é gravado no arquivo de saída
         //Para que o algorítmo reinicie e ache o próximo
         //vencedor entre os restantes na pilha
-        gravaFuncArquivoSaida(arquivoSaida, pilha, vetNo, num_p);
+        for (int i = 0; i < num_p; i++)
+        {
+            if (vetNo[0]->info == pilha[i]->info->cod)
+            {
+                //Gravar funcionario no arquivo
+                salva_ArqSaida(arquivoSaida, i, pilha[i]->info);
+
+                //Removendo item gravado da pilha
+                //removeDaPilha(pilha, i, num_p);
+                pop(pilha[i], 0, &vetTop[i]);
+
+                //Ao gravar o item, não tem necessidade de ir para a próxima iteração
+                break;
+            }
+        }
 
     } while (1 == 1);
 
