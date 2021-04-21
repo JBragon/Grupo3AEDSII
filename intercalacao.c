@@ -140,11 +140,9 @@ void adicionarFimLista(TNo *vetNo[], TNo *tempNo, int num_p)
 void gravarFuncionario(TPilha **pilha, int *vetTop, FILE *arquivoSaida, int *posArqSaida, int indiceParticao)
 {
     TFunc *funcionario = peek_func(pilha[indiceParticao], 0, &vetTop[indiceParticao]);
-    printf("Cod: %d Funcionario: %s \n", funcionario->cod, funcionario->nome);
 
     //Gravar funcionario no arquivo
     salva_ArqSaida(arquivoSaida, posArqSaida, funcionario);
-    posArqSaida++;
 
     //Removendo item gravado da pilha
     pop(pilha[indiceParticao], 0, &vetTop[indiceParticao]);
@@ -154,7 +152,8 @@ void intercalacao_arvore_de_vencedores(TPilha **pilha, int *vetTop, char *nome_a
 {
 
     TNo *vetNo[num_p];
-    FILE *arquivoSaida = fopen(nome_arquivo_saida, "a+b");
+    FILE *arquivoSaida = fopen(nome_arquivo_saida, "wb+");
+    rewind(arquivoSaida);
     int posArqSaida = 0;
 
     printf("\n\n**************************** RESULTADO INTERCALACAO ****************************\n\n");
@@ -187,7 +186,7 @@ void intercalacao_arvore_de_vencedores(TPilha **pilha, int *vetTop, char *nome_a
         //o item no arquivo de saida
         if (vetNo[1] == NULL)
         {
-            gravarFuncionario(pilha, vetTop, &arquivoSaida, &posArqSaida, vetNo[0]->indiceParticao);
+            gravarFuncionario(pilha, vetTop, arquivoSaida, posArqSaida, vetNo[0]->indiceParticao);
             break;
         }
 
@@ -224,7 +223,10 @@ void intercalacao_arvore_de_vencedores(TPilha **pilha, int *vetTop, char *nome_a
         //Ele é gravado no arquivo de saída e retirado da pilha
         //Para que o algorítmo reinicie e ache o próximo
         //vencedor entre os restantes na pilha
-        gravarFuncionario(pilha, vetTop, &arquivoSaida, &posArqSaida, vetNo[0]->indiceParticao);
+        gravarFuncionario(pilha, vetTop, arquivoSaida, posArqSaida, vetNo[0]->indiceParticao);
+        posArqSaida++;
 
     } while (1 == 1);
+
+    fclose(arquivoSaida);
 }
