@@ -84,17 +84,18 @@ int menorChave(TFunc *array[], int size)
     {
         if(array[i] == NULL)
         {
-            posNull = 'S';
+            posNull = 'S'; // caso exista uma posi√ß√£o null, diga que tem.
         }
         else
         {
-            posNotNULL = i;
+            posNotNULL = i; // caso tenha posi√ß√£o diga, salva a posi√ß√£o que n√£o √© null
         }
     }
     if(posNull == 'N')
     {
         for(i = 0; i < size; i++)
         {
+            printf("======Novo Array: %d -- %s \n", array[i]->cod, array[i]->nome);
             if(i == 0)
             {
                 menor = array[0];
@@ -106,6 +107,7 @@ int menorChave(TFunc *array[], int size)
                 posMenor = i;
             }
         }
+        printf("_____________________________________________________________________________\n");
     }
     else
     {
@@ -132,41 +134,44 @@ void selecao_natural(FILE *arq, Lista *nome_arquivos_saida, int M, int nFunc, in
     int posArqSaida = 0;
     int posReservatorio = 0;
 
-    /* LER M REGISTROS DO ARQUIVO PARA A MEM”RIA */
+    /* LER M REGISTROS DO ARQUIVO PARA A MEM√ìRIA */
     if(arq != NULL)
     {
         while(count < M)
         {
             fseek(arq, (posArqEntrada)*tamanho_registro(), SEEK_SET);
             array[count] = le_funcionario(arq);
+            printf("====Inicia no Array: %d -- %s \n", array[count]->cod, array[count]->nome);
             count ++;
             posArqEntrada ++;
             /* CERTO */
         }
-
-        /* GRAVAR O REGISTRO DE MENOR CHAVE NA PARTI«√O DE SAÕDA */
+        printf("_____________________________________________________________________________\n");
+        /* GRAVAR O REGISTRO DE MENOR CHAVE NA PARTI√á√ÉO DE SA√çDA */
         char *nome_particao = nome_arquivos_saida->nome;
         nome_arquivos_saida = nome_arquivos_saida->prox;
 
+        printf("======Abrindo novo arquivo de saida=====\n");
         FILE *arquivoSaida;
         arquivoSaida = fopen(nome_particao, "wb+");
 
-        /* CASO AINDA EXISTA ESPA«O LIVRE NO RESERVAT”RIO */
+        /* CASO AINDA EXISTA ESPA√áO LIVRE NO RESERVAT√ìRIO */
         do
         {
-            /* SELECIONAR NO ARRAY EM MEM”RIA, O REGISTRO R COM MENOR CHAVE */
+            /* SELECIONAR NO ARRAY EM MEM√ìRIA, O REGISTRO R COM MENOR CHAVE */
             posMenorArray = menorChave(array, M);
             menorRegistro = array[posMenorArray];
 
             /* CERTO */
             if (arquivoSaida != NULL)
             {
+                printf("======Salva menor registro no Arq Saida: %d -- %s \n", menorRegistro->cod, menorRegistro->nome);
                 salva_ArqSaida(arquivoSaida, posArqSaida, menorRegistro);
                 posArqSaida++;
             }
             /* CERTO */
 
-            /* SUBSTITUIR NO ARRAY EM MEM”RIA O MENOR REGISTRO PELO PR”XIMO DO ARQUIVO DE ENTRADA */
+            /* SUBSTITUIR NO ARRAY EM MEM√ìRIA O MENOR REGISTRO PELO PR√ìXIMO DO ARQUIVO DE ENTRADA */
             fseek(arq, (posArqEntrada)*tamanho_registro(), SEEK_SET);
             proxRegistroEntrada = le_funcionario(arq);
             array[posMenorArray] = proxRegistroEntrada;
@@ -174,25 +179,26 @@ void selecao_natural(FILE *arq, Lista *nome_arquivos_saida, int M, int nFunc, in
             /* CERTO */
 
             /* CASO A CHAVE DO PROXIMO REGISTRO DE ENTRADA SEJA MENOR DO QUE O MENOR REGISTRO
-             * GRAVA NO RESERVAT”RIO E SUBSTITUI NO ARRAY DE MEM”RIA O MENOR REGISTRO PELO PROXIMO REGISTRO DE ENTRADA
+             * GRAVA NO RESERVAT√ìRIO E SUBSTITUI NO ARRAY DE MEM√ìRIA O MENOR REGISTRO PELO PROXIMO REGISTRO DE ENTRADA
              */
             if(feof(arq))
             {
                 posMenorArray = menorChave(array, M);
                 menorRegistro = array[posMenorArray];
+                printf("======Salva menor registro no Arq Saida: %d -- %s \n", menorRegistro->cod, menorRegistro->nome);
                 salva_ArqSaida(arquivoSaida, posArqSaida, menorRegistro);
                 break;
             }
             if(proxRegistroEntrada->cod < menorRegistro->cod)
             {
-                /* GRAVA NO RESERVAT”RIO */
+                /* GRAVA NO RESERVAT√ìRIO */
                 if(posArqEntrada < nFunc)
                 {
 
                     reservatorio[posReservatorio] = proxRegistroEntrada;
                     posReservatorio++;
 
-                    /* SUBSTITUIR NO ARRAY EM MEM”RIA O MENOR REGISTRO PELO PROXIMO REGISTRO DO ARQUIVO DE ENTRADA */
+                    /* SUBSTITUIR NO ARRAY EM MEM√ìRIA O MENOR REGISTRO PELO PROXIMO REGISTRO DO ARQUIVO DE ENTRADA */
                     posArqEntrada++;
                     fseek(arq, (posArqEntrada)*tamanho_registro(), SEEK_SET);
                     proxRegistroEntrada = le_funcionario(arq);
@@ -216,29 +222,26 @@ void selecao_natural(FILE *arq, Lista *nome_arquivos_saida, int M, int nFunc, in
                 }
             }
 
-            if(posReservatorio < M)
+            if(posReservatorio >= M)
             {
-                /* VERIFICA QUANTIDADE DE ITENS NO RESERVAT”RIO */
-            }
-            else
-            {
-                /* FECHAR A PARTI«√O DE SAÕDA */
+                /* FECHAR A PARTI√á√ÉO DE SA√çDA */
                 fclose(arquivoSaida);
 
-                /* COPIAR OS REGISTROS DO RESERVAT”RIO PARA O ARRAY EM MEM”RIA */
+                /* COPIAR OS REGISTROS DO RESERVAT√ìRIO PARA O ARRAY EM MEM√ìRIA */
                 for(int i = 0; i < posReservatorio; i ++)
                 {
                     array[i] = reservatorio[i];
                 }
 
-                /* ESVAZIAR O RESERVAT”RIO */
+                /* ESVAZIAR O RESERVAT√ìRIO */
                 for(int r = 0; r < M; r++)
                 {
                     reservatorio[r] = NULL;
                 }
                 posReservatorio = 0;
 
-                /* ABRIR NOVO ARQUIVO DE SAÕDA */
+                printf("======Abrindo novo arquivo de saida=====\n");
+                /* ABRIR NOVO ARQUIVO DE SA√çDA */
                 char *nome_particao = nome_arquivos_saida->nome;
                 nome_arquivos_saida = nome_arquivos_saida->prox;
 
