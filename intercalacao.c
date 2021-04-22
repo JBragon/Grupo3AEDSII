@@ -7,6 +7,7 @@
 typedef struct no
 {
     int codFuncionario;
+    //Indice onde o funcionário encontra-se na pilha
     int indiceParticao;
     struct no *esq;
     struct no *dir;
@@ -156,22 +157,25 @@ void intercalacao_arvore_de_vencedores(TPilha **pilha, int *vetTop, char *nome_a
     rewind(arquivoSaida);
     int posArqSaida = 0;
 
-    printf("\n\n**************************** RESULTADO INTERCALACAO ****************************\n\n");
-
     do
     {
 
         int indiceVetorNo = 0;
 
+        printf("\n\n");
         //Populando a lista de nós para fazer a classificação
         for (int i = 0; i < num_p; i++)
         {
+            //Verificando se pilha tem item
             if (vetTop[i] >= 0)
             {
+
                 TNo *n = (TNo *)malloc(sizeof(TNo));
 
-                //Usar o peek_func
+                //peek_func é a função responsável em retornar o funcionário
                 TFunc *funcionario = peek_func(pilha[i], 0, &vetTop[i]);
+
+                printf("pilha[%d] =======> %d \n", i, funcionario->cod);
 
                 n->codFuncionario = funcionario->cod;
                 n->indiceParticao = i;
@@ -193,6 +197,12 @@ void intercalacao_arvore_de_vencedores(TPilha **pilha, int *vetTop, char *nome_a
         //Classificação do vencedor entre os dois primeiros nós da lista
         do
         {
+            printf("\n\n");
+            for (int i = 0; i < num_p; i++)
+            {
+                if (vetNo[i] != NULL)
+                    printf("vetNo[%d] =======> %d \n", i, vetNo[i]->codFuncionario);
+            }
 
             //Nós de comparação
             TNo *noEsquerda = (TNo *)malloc(sizeof(TNo));
@@ -229,4 +239,6 @@ void intercalacao_arvore_de_vencedores(TPilha **pilha, int *vetTop, char *nome_a
     } while (1 == 1);
 
     fclose(arquivoSaida);
+
+    printf("\n\n**************************** RESULTADO INTERCALACAO ****************************\n\n");
 }
