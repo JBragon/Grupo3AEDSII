@@ -7,6 +7,7 @@
 typedef struct no
 {
     int codFuncionario;
+    //Indice onde o funcionário encontra-se na pilha
     int indiceParticao;
     struct no *esq;
     struct no *dir;
@@ -166,11 +167,12 @@ void intercalacao_arvore_de_vencedores(TPilha **pilha, int *vetTop, char *nome_a
         //Populando a lista de nós para fazer a classificação
         for (int i = 0; i < num_p; i++)
         {
+            //Verificando se pilha tem item
             if (vetTop[i] >= 0)
             {
                 TNo *n = (TNo *)malloc(sizeof(TNo));
 
-                //Usar o peek_func
+                //peek_func é a função responsável em retornar o funcionário  
                 TFunc *funcionario = peek_func(pilha[i], 0, &vetTop[i]);
 
                 n->codFuncionario = funcionario->cod;
